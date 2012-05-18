@@ -1,6 +1,7 @@
 #define BOOST_TEST_MODULE BaseTypes
 #include <boost/test/included/unit_test.hpp>
 #include <numeric/stats.hpp>
+#include <numeric/histogram.hpp>
 
 BOOST_AUTO_TEST_CASE( stats_test )
 {
@@ -23,5 +24,19 @@ BOOST_AUTO_TEST_CASE( stats_test )
 
     BOOST_CHECK( sv.mean().isApprox( Eigen::Vector2d( 0.5, 1.0 ) ) );
     */
+}
 
+BOOST_AUTO_TEST_CASE( histogram_test )
+{
+    base::Histogram h( 10, 0.0, 10.0 );
+    h.update( 0.5 );
+    BOOST_CHECK_EQUAL( h[0], 1 );
+    h.update( -0.5 );
+    BOOST_CHECK_EQUAL( h[0], 2 );
+    h.update( 8.5 );
+    BOOST_CHECK_EQUAL( h[8], 1 );
+    h.update( 9.5 );
+    BOOST_CHECK_EQUAL( h[9], 1 );
+    h.update( 10.5 );
+    BOOST_CHECK_EQUAL( h[9], 2 );
 }

@@ -1,2 +1,5 @@
-install(FILES stats.hpp DESTINATION include/numeric)
+install(FILES 
+    stats.hpp 
+    histogram.hpp 
+    DESTINATION include/numeric)
 
