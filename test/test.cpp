@@ -29,6 +29,11 @@ BOOST_AUTO_TEST_CASE( stats_test )
 BOOST_AUTO_TEST_CASE( histogram_test )
 {
     base::Histogram h( 10, 0.0, 10.0 );
+
+    BOOST_CHECK_CLOSE( h.getLowerBound( 0 ), 0, 1e-6 );
+    BOOST_CHECK_CLOSE( h.getUpperBound( 0 ), 1.0, 1e-6 );
+    BOOST_CHECK_CLOSE( h.getUpperBound( 9 ), 10.0, 1e-6 );
+
     h.update( 0.5 );
     BOOST_CHECK_EQUAL( h[0], 1 );
     h.update( -0.5 );

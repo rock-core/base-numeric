@@ -34,20 +34,27 @@ struct Buckets
 	return buckets[ getIndex( value ) ];
     }
 
+    double getUpperBound( size_t idx ) const
+    {
+	return min_val + ( (idx+1) * (max_val - min_val)/count );
+    }
+
+    double getLowerBound( size_t idx ) const
+    {
+	return min_val + ( (idx) * (max_val - min_val)/count );
+    }
+
     size_t size() const
     {
-	size_t sum = 0;
-	for( typename std::vector<T>::const_iterator it = buckets.begin(); it != buckets.end(); it++ )
-	{
-	    sum += it->size();
-	}
-	return sum;
+	return buckets.size();
     }
     
 };
 
 struct Histogram : public Buckets<size_t>
 {
+    size_t n;
+
     Histogram( int count, double min_val, double max_val )
 	: Buckets( count, min_val, max_val )
     {
@@ -55,7 +62,13 @@ struct Histogram : public Buckets<size_t>
 
     void update( double value )
     {
+	++n;
 	++get( value );
+    }
+
+    size_t total() const
+    {
+	return n;
     }
 };
 
