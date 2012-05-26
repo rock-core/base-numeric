@@ -83,6 +83,7 @@ public:
     T mean() const;
     SquareType var() const;
     T stdev() const;
+    double sumWeights() const;
 };
 
 template <class T>
@@ -124,6 +125,12 @@ void Stats<T>::update( T const& data, double weight )
     sum_weight_ = temp;
 
     n++;
+}
+
+template <class T>
+double Stats<T>::sumWeights() const
+{
+    return sum_weight_;
 }
 
 template <class T>
