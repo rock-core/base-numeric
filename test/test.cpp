@@ -16,14 +16,15 @@ BOOST_AUTO_TEST_CASE( stats_test )
     BOOST_CHECK_EQUAL( sv.min(), 1.0 );
     BOOST_CHECK_EQUAL( sv.max(), 3.0 );
 
-    /*
     // specialisations for eigen
     base::Stats< Eigen::Vector2d > mv;
-    sv.update( Eigen::Vector2d(0,1) );
-    sv.update( Eigen::Vector2d(1,1) );
+    mv.update( Eigen::Vector2d(0,1) );
+    mv.update( Eigen::Vector2d(1,1) );
 
-    BOOST_CHECK( sv.mean().isApprox( Eigen::Vector2d( 0.5, 1.0 ) ) );
-    */
+    BOOST_CHECK( mv.mean().isApprox( Eigen::Vector2d( 0.5, 1.0 ) ) );
+    Eigen::Matrix2d t2;
+    t2 << 0.25, 0, 0, 0;
+    BOOST_CHECK( mv.var().isApprox( t2 ) );
 }
 
 BOOST_AUTO_TEST_CASE( histogram_test )
