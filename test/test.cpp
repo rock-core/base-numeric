@@ -25,6 +25,9 @@ BOOST_AUTO_TEST_CASE( stats_test )
     Eigen::Matrix2d t2;
     t2 << 0.25, 0, 0, 0;
     BOOST_CHECK( mv.var().isApprox( t2 ) );
+
+    // test weighted algorithm
+    // TODO
 }
 
 BOOST_AUTO_TEST_CASE( histogram_test )

@@ -11,6 +11,7 @@ struct Square
 {
     typedef T Type;
     static inline Type value( Type a ) { return a * a; }
+    static inline Type value( Type a, Type b ) { return a * b; }
 };
 
 template <class T>
@@ -26,6 +27,7 @@ struct Square< Eigen::Matrix<_Scalar, _Rows, 1, _Options> >
     typedef typename Eigen::Matrix<_Scalar, _Rows, 1, _Options> T;
     typedef typename Eigen::Matrix<_Scalar, _Rows, _Rows, _Options> Type;
     static inline Type value( const T& a ) { return a * a.transpose(); }
+    static inline Type value( const T& a, const T& b ) { return a * b.transpose(); }
 };
 
 template <class _Scalar, int _Rows, int _Cols, int _Options>
@@ -66,13 +68,15 @@ class Stats
 
     T min_;
     T max_;
-    SquareType Sxx;
-    T Sx;
+
+    SquareType M2_;
+    T mean_;
+    double sum_weight_;
     size_t n;
 
 public:
     Stats();
-    void update( T const& data );
+    void update( T const& data, double weight = 1.0 );
 
     T min() const;
     T max() const;
@@ -83,12 +87,15 @@ public:
 
 template <class T>
 Stats<T>::Stats() 
-    : Sxx( Zero< typename Square<T>::Type >::value() ), Sx( Zero<T>::value() ), n( 0 )
+    : M2_( Zero< typename Square<T>::Type >::value() ), 
+    mean_( Zero<T>::value() ), 
+    sum_weight_( 0.0 ),
+    n( 0 )
 {
 }
 
 template <class T>
-void Stats<T>::update( T const& data ) 
+void Stats<T>::update( T const& data, double weight ) 
 {
     // min max handling
     if( !n )
@@ -102,9 +109,19 @@ void Stats<T>::update( T const& data )
 	max_ = base::max_el(max_, data);
     }
 
-    // accumulate data for variance
-    Sx += data;
-    Sxx += Square<T>::value( data );
+    //
+    // algorithm is based on 
+    // D. H. D. West (1979). Communications of the ACM, 22, 9, 532-535:
+    // Updating Mean and Variance Estimates: An Improved Method
+    //
+    // http://en.wikipedia.org/wiki/Algorithms_for_calculating_variance
+    //
+    double temp = weight + sum_weight_;
+    T delta = data - mean_;
+    T R = delta * weight / temp;
+    mean_ = mean_ + R;
+    M2_ = M2_ + sum_weight_ * Square<T>::value( delta, R );
+    sum_weight_ = temp;
 
     n++;
 }
@@ -112,13 +129,13 @@ void Stats<T>::update( T const& data )
 template <class T>
 T Stats<T>::mean() const
 {
-    return Sx * (1.0/n);
+    return mean_;
 }
 
 template <class T>
 inline typename Stats<T>::SquareType  Stats<T>::var() const
 {
-    return Sxx * (1.0/n) - Square<T>::value( mean() );
+    return M2_ / sum_weight_;
 }
 
 template <class T>
