@@ -56,7 +56,7 @@ struct Histogram : public Buckets<size_t>
     size_t n;
 
     Histogram( int count, double min_val, double max_val )
-	: Buckets( count, min_val, max_val )
+	: Buckets<size_t>( count, min_val, max_val )
     {
     }
 
