@@ -1,5 +1,6 @@
-install(FILES 
-    stats.hpp 
-    histogram.hpp 
+install(FILES
+    stats.hpp
+    histogram.hpp
+    FitPolynom.hpp
     DESTINATION include/numeric)
 
