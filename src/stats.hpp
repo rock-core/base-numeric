@@ -72,7 +72,7 @@ class Stats
     SquareType M2_;
     T mean_;
     double sum_weight_;
-    size_t n;
+    size_t n_;
 
 public:
     Stats();
@@ -84,6 +84,7 @@ public:
     SquareType var() const;
     T stdev() const;
     double sumWeights() const;
+    size_t n() const;
 };
 
 template <class T>
@@ -91,7 +92,7 @@ Stats<T>::Stats()
     : M2_( Zero< typename Square<T>::Type >::value() ), 
     mean_( Zero<T>::value() ), 
     sum_weight_( 0.0 ),
-    n( 0 )
+    n_( 0 )
 {
 }
 
@@ -99,7 +100,7 @@ template <class T>
 void Stats<T>::update( T const& data, double weight ) 
 {
     // min max handling
-    if( !n )
+    if( !n_ )
     {
 	min_ = data;
 	max_ = data;
@@ -124,7 +125,7 @@ void Stats<T>::update( T const& data, double weight )
     M2_ = M2_ + sum_weight_ * Square<T>::value( delta, R );
     sum_weight_ = temp;
 
-    n++;
+    n_++;
 }
 
 template <class T>
@@ -161,6 +162,12 @@ template <class T>
 T Stats<T>::max() const
 {
     return max_;
+}
+
+template <class T>
+size_t Stats<T>::n() const
+{
+    return n_;
 }
 
 }
