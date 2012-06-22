@@ -2,6 +2,7 @@ install(FILES
     stats.hpp
     histogram.hpp
     FitPolynom.hpp
+    MatchTemplate.hpp
     DESTINATION include/numeric)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/numeric.pc.in

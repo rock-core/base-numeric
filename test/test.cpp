@@ -2,6 +2,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include <numeric/stats.hpp>
 #include <numeric/histogram.hpp>
+#include <numeric/MatchTemplate.hpp>
 
 BOOST_AUTO_TEST_CASE( stats_test )
 {
@@ -48,4 +49,79 @@ BOOST_AUTO_TEST_CASE( histogram_test )
     BOOST_CHECK_EQUAL( h[9], 1 );
     h.update( 10.5 );
     BOOST_CHECK_EQUAL( h[9], 2 );
+}
+
+BOOST_AUTO_TEST_CASE(test_match_template)
+{
+  std::vector<float> values;
+  values.push_back(0);
+  values.push_back(3);
+  values.push_back(2);
+  values.push_back(3);
+  values.push_back(2);
+  values.push_back(5);
+  values.push_back(4);
+  values.push_back(10);
+  values.push_back(9);
+  values.push_back(10);
+  values.push_back(9);
+  values.push_back(11);
+  values.push_back(5);
+  values.push_back(8);
+  values.push_back(6);
+  values.push_back(7);
+  values.push_back(0);
+
+  std::vector<float> vtemplate;
+  vtemplate.push_back(5);
+  vtemplate.push_back(4);
+  vtemplate.push_back(10);
+  vtemplate.push_back(9);
+  vtemplate.push_back(12);
+  vtemplate.push_back(9);
+  vtemplate.push_back(11);
+  vtemplate.push_back(5);
+
+  int pos;
+  double match;
+  numeric::matchTemplate1D(values.begin(),values.end(),vtemplate.begin(),vtemplate.end(),pos,match);
+  BOOST_CHECK_EQUAL(5,pos);
+  BOOST_CHECK_EQUAL(4,match);
+
+  numeric::matchTemplate1D(vtemplate.begin(),vtemplate.end(),values.begin(),values.end(),pos,match);
+  BOOST_CHECK_EQUAL(-1,pos);
+}
+
+BOOST_AUTO_TEST_CASE(test_match_template2)
+{
+  std::vector<float> values;
+  values.push_back(0);
+  values.push_back(3);
+  values.push_back(2);
+  values.push_back(3);
+  values.push_back(2);
+  values.push_back(5);
+  values.push_back(4);
+  values.push_back(10);
+
+  std::vector<float> vtemplate;
+  vtemplate.push_back(0);
+  vtemplate.push_back(3);
+  vtemplate.push_back(2);
+  vtemplate.push_back(3);
+  vtemplate.push_back(2);
+  vtemplate.push_back(5);
+  vtemplate.push_back(4);
+  vtemplate.push_back(10);
+
+  int pos;
+  double match;
+  numeric::matchTemplate1D(values.begin(),values.end(),vtemplate.begin(),vtemplate.end(),pos,match);
+  BOOST_CHECK_EQUAL(0,pos);
+  BOOST_CHECK_EQUAL(0,match);
+
+  vtemplate.erase(vtemplate.begin());
+  numeric::matchTemplate1D(values.begin(),values.end(),vtemplate.begin(),vtemplate.end(),pos,match);
+  BOOST_CHECK_EQUAL(1,pos);
+  BOOST_CHECK_EQUAL(0,match);
 }
