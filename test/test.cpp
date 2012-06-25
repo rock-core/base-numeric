@@ -84,11 +84,11 @@ BOOST_AUTO_TEST_CASE(test_match_template)
 
   int pos;
   double match;
-  numeric::matchTemplate1D(values.begin(),values.end(),vtemplate.begin(),vtemplate.end(),pos,match);
+  numeric::matchTemplate1D(values.begin(),values.end(),vtemplate.begin(),vtemplate.end(),pos,match,false);
   BOOST_CHECK_EQUAL(5,pos);
   BOOST_CHECK_EQUAL(4,match);
 
-  numeric::matchTemplate1D(vtemplate.begin(),vtemplate.end(),values.begin(),values.end(),pos,match);
+  numeric::matchTemplate1D(vtemplate.begin(),vtemplate.end(),values.begin(),values.end(),pos,match,false);
   BOOST_CHECK_EQUAL(-1,pos);
 }
 
@@ -116,12 +116,12 @@ BOOST_AUTO_TEST_CASE(test_match_template2)
 
   int pos;
   double match;
-  numeric::matchTemplate1D(values.begin(),values.end(),vtemplate.begin(),vtemplate.end(),pos,match);
+  numeric::matchTemplate1D(values.begin(),values.end(),vtemplate.begin(),vtemplate.end(),pos,match,false);
   BOOST_CHECK_EQUAL(0,pos);
   BOOST_CHECK_EQUAL(0,match);
 
   vtemplate.erase(vtemplate.begin());
-  numeric::matchTemplate1D(values.begin(),values.end(),vtemplate.begin(),vtemplate.end(),pos,match);
+  numeric::matchTemplate1D(values.begin(),values.end(),vtemplate.begin(),vtemplate.end(),pos,match,false);
   BOOST_CHECK_EQUAL(1,pos);
   BOOST_CHECK_EQUAL(0,match);
 }

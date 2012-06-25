@@ -14,17 +14,20 @@ namespace numeric
     //saves the best position in pos or -1 if the sequence is too small to accommodate the template
     //saves the square difference of the best position in best_match
   template<typename TIter>
-    void matchTemplate1D(TIter start,TIter end,TIter template_start, TIter template_end,int &pos,double &best_match)
+    void matchTemplate1D(TIter start,TIter end,TIter template_start, TIter template_end,int &pos,double &best_match,bool remove_offset=true)
     {
         best_match = std::numeric_limits<double>::max();
         pos = -1;
         for(int i=0;;++i,++start)
         {
             double match = 0;
+            double offset = 0;
+            if(remove_offset)
+                offset = *template_start - *start;
             TIter temp_start = start;
             TIter temp_tstart = template_start;
             for(;temp_tstart != template_end && temp_start != end;++temp_tstart,++temp_start)
-                match += pow((*temp_start) - (*temp_tstart),2);
+                match += pow((*temp_start) - (*temp_tstart) + offset,2);
 
             //could not compare hole template
             if(temp_start == end && temp_tstart != template_end)
