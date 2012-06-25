@@ -125,3 +125,96 @@ BOOST_AUTO_TEST_CASE(test_match_template2)
   BOOST_CHECK_EQUAL(1,pos);
   BOOST_CHECK_EQUAL(0,match);
 }
+
+BOOST_AUTO_TEST_CASE(test_join_vectors)
+{
+  std::vector<float> v1;
+  v1.push_back(0);
+  v1.push_back(3);
+  v1.push_back(2);
+  v1.push_back(2);
+  v1.push_back(5);
+  v1.push_back(4);
+  v1.push_back(10);
+
+  std::vector<float> v2;
+  v2.push_back(11);
+  v2.push_back(12);
+  v2.push_back(13);
+  v2.push_back(14);
+  v2.push_back(15);
+  v2.push_back(16);
+  v2.push_back(17);
+  v2.push_back(18);
+  v2.push_back(19);
+  v2.push_back(20);
+
+  //copy it to the end of v1
+  std::vector<float> result = numeric::joinVectors(v1,v2,(int) v1.size(),0.0F);
+  std::vector<float> result2 = v1;
+  result2.resize(v1.size()+v2.size());
+  std::copy(v2.begin(),v2.end(),result2.begin()+v1.size());
+  BOOST_CHECK_EQUAL(result.size(),result2.size());
+  BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
+
+  //copy it to the end of v2
+  result = numeric::joinVectors(v1,v2,-((int)v2.size()),0.0F);
+  result2 = v2;
+  result2.resize(v1.size()+v2.size());
+  std::copy(v1.begin(),v1.end(),result2.begin()+v2.size());
+  BOOST_CHECK_EQUAL(result.size(),result2.size());
+  BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
+
+  //hole between v1 and v2
+  result = numeric::joinVectors(v1,v2,(int) v1.size()+10,0.0F);
+  result2 = v1;
+  result2.resize(v1.size()+v2.size()+10);
+  std::fill(result2.begin()+v1.size(),result2.begin()+v1.size()+10,0.0F);
+  std::copy(v2.begin(),v2.end(),result2.begin()+v1.size()+10);
+  BOOST_CHECK_EQUAL(result.size(),result2.size());
+  BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
+
+  //hole between v2 and v1
+  result = numeric::joinVectors(v1,v2,-((int)v2.size()+10),0.0F);
+  result2 = v2;
+  result2.resize(v1.size()+v2.size()+10);
+  std::fill(result2.begin()+v2.size(),result2.begin()+v2.size()+10,0.0F);
+  std::copy(v1.begin(),v1.end(),result2.begin()+v2.size()+10);
+  BOOST_CHECK_EQUAL(result.size(),result2.size());
+  BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
+  
+  //half overlapping (left side) 
+  result = numeric::joinVectors(v1,v2,-5,0.0F);
+  result2 = v2;
+  result2.resize(-5+v1.size()+v2.size());
+  std::copy(v1.begin()+(v2.size()-5),v1.end(),result2.begin()+v2.size());
+  BOOST_CHECK_EQUAL(result.size(),result2.size());
+  BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
+  
+  //half overlapping (right side) 
+  result = numeric::joinVectors(v1,v2,5,0.0F);
+  result2 = v1;
+  result2.resize(v2.size()+5);
+  std::copy(v2.begin(),v2.end(),result2.begin()+5);
+  BOOST_CHECK_EQUAL(result.size(),result2.size());
+  BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
+  
+  //fully overlapping (v1 < v2) 
+  result = numeric::joinVectors(v1,v2,-1,0.0F);
+  result2 = v2;
+  BOOST_CHECK_EQUAL(result.size(),result2.size());
+  BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
+
+  result = numeric::joinVectors(v2,v1,1,0.0F);
+  result2 = v2;
+  std::copy(v1.begin(),v1.end(),result2.begin()+1);
+  BOOST_CHECK_EQUAL(result.size(),result2.size());
+  BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
+  
+  //fully overlapping (v1 = v2) 
+  v2.resize(v1.size());
+  result = numeric::joinVectors(v1,v2,0,0.0F);
+  result2 = v2;
+  BOOST_CHECK_EQUAL(result.size(),result2.size());
+  BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
+}
