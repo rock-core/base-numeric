@@ -1,6 +1,6 @@
 install(FILES
-    stats.hpp
-    histogram.hpp
+    Stats.hpp
+    Histogram.hpp
     FitPolynom.hpp
     MatchTemplate.hpp
     DESTINATION include/numeric)

@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE BaseTypes
 #include <boost/test/included/unit_test.hpp>
-#include <numeric/stats.hpp>
-#include <numeric/histogram.hpp>
+#include <numeric/Stats.hpp>
+#include <numeric/Histogram.hpp>
 #include <numeric/MatchTemplate.hpp>
 
 BOOST_AUTO_TEST_CASE( stats_test )
