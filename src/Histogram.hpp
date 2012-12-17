@@ -20,6 +20,11 @@ struct Buckets
 	assert( min_val < max_val );
     }
 
+    const T& operator[]( size_t idx ) const
+    {
+	return buckets[idx];
+    }
+
     T& operator[]( size_t idx )
     {
 	return buckets[idx];
@@ -36,14 +41,24 @@ struct Buckets
 	return buckets[ getIndex( value ) ];
     }
 
+    double getBucketWidth() const
+    {
+	return (max_val - min_val)/count; 
+    }
+
     double getUpperBound( size_t idx ) const
     {
-	return min_val + ( (idx+1) * (max_val - min_val)/count );
+	return min_val + ( (idx+1) * getBucketWidth() );
     }
 
     double getLowerBound( size_t idx ) const
     {
-	return min_val + ( (idx) * (max_val - min_val)/count );
+	return min_val + ( (idx) * getBucketWidth() );
+    }
+
+    double getCenter( size_t idx ) const
+    {
+	return min_val + ( (idx+0.5) * getBucketWidth() );
     }
 
     size_t size() const
@@ -82,7 +97,7 @@ struct Histogram : public Buckets<size_t>
      *			min_val
      */
     Histogram( int count, double min_val, double max_val )
-	: Buckets<size_t>( count, min_val, max_val )
+	: Buckets<size_t>( count, min_val, max_val ), n(0)
     {
     }
 
@@ -97,6 +112,16 @@ struct Histogram : public Buckets<size_t>
     {
 	++n;
 	++get( value );
+    }
+
+    /** 
+     * return relative count in bin so that the integral over all bins would
+     * result in 1.0. Note, that this is the integral and not the sum, so it
+     * takes the width of the bins into account.
+     */
+    double getRelative( size_t idx ) const
+    {
+	return operator[]( idx ) / getBucketWidth() / (double)total();
     }
 
     /**
