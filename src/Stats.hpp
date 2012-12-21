@@ -89,7 +89,7 @@ public:
 
 template <class T>
 Stats<T>::Stats() 
-    : M2_( Zero< typename Square<T>::Type >::value() ), 
+    : M2_( Zero<SquareType>::value() ), 
     mean_( Zero<T>::value() ), 
     sum_weight_( 0.0 ),
     n_( 0 )
@@ -143,7 +143,7 @@ T Stats<T>::mean() const
 template <class T>
 inline typename Stats<T>::SquareType  Stats<T>::var() const
 {
-    return M2_ / sum_weight_;
+    return (sum_weight_ > 0.0 ) ? SquareType(M2_ / sum_weight_) : Zero<SquareType>::value();
 }
 
 template <class T>
