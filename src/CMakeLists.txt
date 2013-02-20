@@ -2,6 +2,7 @@ install(FILES
     Stats.hpp
     Histogram.hpp
     FitPolynom.hpp
+    PlaneFitting.hpp
     MatchTemplate.hpp
     DESTINATION include/numeric)
 

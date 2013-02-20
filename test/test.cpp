@@ -3,6 +3,7 @@
 #include <numeric/Stats.hpp>
 #include <numeric/Histogram.hpp>
 #include <numeric/MatchTemplate.hpp>
+#include <numeric/PlaneFitting.hpp>
 
 BOOST_AUTO_TEST_CASE( stats_test )
 {
@@ -49,6 +50,49 @@ BOOST_AUTO_TEST_CASE( histogram_test )
     BOOST_CHECK_EQUAL( h[9], 1 );
     h.update( 10.5 );
     BOOST_CHECK_EQUAL( h[9], 2 );
+}
+
+BOOST_AUTO_TEST_CASE( planefitting_test )
+{
+    // fully specified on xy plane
+    base::PlaneFitting<float> pf;
+    pf.update( Eigen::Vector3f( 0.0, 0, -1.0 ) );
+    pf.update( Eigen::Vector3f( 1.0, 0, -1.0 ) );
+    pf.update( Eigen::Vector3f( 0.0, 1.0, -1.0 ) );
+    Eigen::Vector3f r1 = pf.getCoeffs();
+    BOOST_CHECK_SMALL( r1.x(), 1e-6f );
+    BOOST_CHECK_SMALL( r1.y(), 1e-6f );
+    BOOST_CHECK_CLOSE( r1.z(), -1.0, 1e-6 );
+
+    // underspecified (returns xy plane)
+    pf.clear();
+    pf.update( Eigen::Vector3f( 0.0, 0, -1.0 ) );
+    pf.update( Eigen::Vector3f( 1.0, 0, -1.0 ) );
+    Eigen::Vector3f r2 = pf.getCoeffs();
+    BOOST_CHECK_SMALL( r2.x(), 1e-4f );
+    BOOST_CHECK_SMALL( r2.y(), 1e-4f );
+    BOOST_CHECK_CLOSE( r2.z(), -1.0, 1e-4 );
+
+    // check slope on y axis and give unequal weights
+    // the weights shouldnt affect the slope in this case
+    pf.clear();
+    pf.update( Eigen::Vector3f( 0.0, 0, -1.0 ), 1.0 );
+    pf.update( Eigen::Vector3f( 1.0, 0, -1.0 ), 1.0 );
+    pf.update( Eigen::Vector3f( 0.0, 1.0, 0.0 ), 0.1 );
+    Eigen::Vector3f r3 = pf.getCoeffs();
+    // need to go down here with the accuracy
+    // seems to be the solver which is happy
+    // this way
+    BOOST_CHECK_SMALL( r3.x(), 1e-4f );
+    BOOST_CHECK_CLOSE( r3.y(), 1.0, 1e-4 );
+    BOOST_CHECK_CLOSE( r3.z(), -1.0, 1e-4 );
+
+    // this will actually yield a vector of all zeros
+    pf.clear();
+    Eigen::Vector3f r4 = pf.getCoeffs();
+    BOOST_CHECK_SMALL( r4.x(), 1e-4f );
+    BOOST_CHECK_SMALL( r4.y(), 1e-4f );
+    BOOST_CHECK_SMALL( r4.z(), 1e-4f );
 }
 
 BOOST_AUTO_TEST_CASE(test_match_template)
