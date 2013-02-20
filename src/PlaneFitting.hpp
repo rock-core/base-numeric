@@ -32,6 +32,19 @@ public:
 	x = y = z = xx = yy = xy = xz = yz = n = 0;
     }
 
+    void update( const PlaneFitting& other )
+    {
+	x += other.x;
+	y += other.y;
+	z += other.z;
+	xx += other.xx;
+	yy += other.yy;
+	xy += other.xy;
+	xz += other.xz;
+	yz += other.yz;
+	n += other.n;
+    }
+
     void update( const typename Eigen::Matrix<Scalar, 3, 1>& p, Scalar weight = 1.0 )
     {
 	x += p.x() * weight;
