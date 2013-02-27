@@ -93,6 +93,18 @@ BOOST_AUTO_TEST_CASE( planefitting_test )
     BOOST_CHECK_SMALL( r4.x(), 1e-4f );
     BOOST_CHECK_SMALL( r4.y(), 1e-4f );
     BOOST_CHECK_SMALL( r4.z(), 1e-4f );
+
+    // check the covariance matrix for
+    {
+    pf.clear();
+    pf.update( Eigen::Vector3f( 0.0, 0, -1.0 ), 0.5 );
+    pf.update( Eigen::Vector3f( 0.0, 0, 1.0 ), 0.5 );
+    Eigen::Vector3f coeff;
+    Eigen::Matrix3f cov;
+    pf.solve( coeff, &cov );
+
+    BOOST_CHECK_CLOSE( cov(2,2), 1.0, 1e-4 );
+    }
 }
 
 BOOST_AUTO_TEST_CASE(test_match_template)
