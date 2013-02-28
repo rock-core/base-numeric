@@ -99,11 +99,9 @@ BOOST_AUTO_TEST_CASE( planefitting_test )
     pf.clear();
     pf.update( Eigen::Vector3f( 0.0, 0, -1.0 ), 0.5 );
     pf.update( Eigen::Vector3f( 0.0, 0, 1.0 ), 0.5 );
-    Eigen::Vector3f coeff;
-    Eigen::Matrix3f cov;
-    pf.solve( coeff, &cov );
+    base::PlaneFitting<float>::Result res = pf.solve();
 
-    BOOST_CHECK_CLOSE( cov(2,2), 1.0, 1e-4 );
+    BOOST_CHECK_CLOSE( res.getCovariance()(2,2), 1.0, 1e-4 );
     }
 }
 
