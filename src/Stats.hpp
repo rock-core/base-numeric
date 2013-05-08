@@ -2,6 +2,7 @@
 #define BASE_STATS_HPP__
 
 #include <Eigen/Core>
+#include <base/eigen.h>
 
 namespace base
 {
@@ -74,9 +75,12 @@ class Stats
     double sum_weight_;
     size_t n_;
 
+    void init( T const& data);
+
 public:
     Stats();
     void update( T const& data, double weight = 1.0 );
+    void clear();
 
     T min() const;
     T max() const;
@@ -89,11 +93,35 @@ public:
 
 template <class T>
 Stats<T>::Stats() 
-    : M2_( Zero<SquareType>::value() ), 
-    mean_( Zero<T>::value() ), 
-    sum_weight_( 0.0 ),
-    n_( 0 )
 {
+    clear();
+}
+
+template <class T>
+void Stats<T>::clear() {
+    n_ = 0;
+}
+
+template <class T>
+void Stats<T>::init( T const& data ) {
+
+        sum_weight_ = 0.0;
+        min_ = data;
+        max_ = data;
+        M2_ = Zero<SquareType>::value();
+        mean_ = Zero<T>::value();
+}
+
+template <>
+void Stats<base::VectorXd>::init( base::VectorXd const& data ) {
+
+    int rows = data.rows();
+
+    sum_weight_ = 0.0;
+    min_ = data;
+    max_ = data;
+    M2_ = base::MatrixXd::Zero(rows,rows);
+    mean_ = base::VectorXd::Zero(rows);
 }
 
 template <class T>
@@ -102,8 +130,7 @@ void Stats<T>::update( T const& data, double weight )
     // min max handling
     if( !n_ )
     {
-	min_ = data;
-	max_ = data;
+        init(data);
     }
     else
     {
@@ -146,10 +173,23 @@ inline typename Stats<T>::SquareType  Stats<T>::var() const
     return (sum_weight_ > 0.0 ) ? SquareType(M2_ / sum_weight_) : Zero<SquareType>::value();
 }
 
+template <>
+inline typename Stats<VectorXd>::SquareType Stats<VectorXd>::var() const
+{
+    return ( sum_weight_ > 0.0 ) ? SquareType(M2_ / sum_weight_) :
+        base::MatrixXd::Zero(M2_.rows(),M2_.cols());
+}
+
 template <class T>
 T Stats<T>::stdev() const
 {
     return sqrt( var() );
+}
+
+template <>
+base::VectorXd Stats<base::VectorXd>::stdev() const
+{
+    return var().diagonal().array().sqrt();
 }
 
 template <class T>
