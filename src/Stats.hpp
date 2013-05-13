@@ -174,7 +174,7 @@ inline typename Stats<T>::SquareType  Stats<T>::var() const
 }
 
 template <>
-inline typename Stats<VectorXd>::SquareType Stats<VectorXd>::var() const
+inline Stats<VectorXd>::SquareType Stats<VectorXd>::var() const
 {
     return ( sum_weight_ > 0.0 ) ? SquareType(M2_ / sum_weight_) :
         base::MatrixXd::Zero(M2_.rows(),M2_.cols());
