@@ -113,7 +113,7 @@ void Stats<T>::init( T const& data ) {
 }
 
 template <>
-void Stats<base::VectorXd>::init( base::VectorXd const& data ) {
+inline void Stats<base::VectorXd>::init( base::VectorXd const& data ) {
 
     int rows = data.rows();
 
@@ -187,7 +187,7 @@ T Stats<T>::stdev() const
 }
 
 template <>
-base::VectorXd Stats<base::VectorXd>::stdev() const
+inline base::VectorXd Stats<base::VectorXd>::stdev() const
 {
     return var().diagonal().array().sqrt();
 }
