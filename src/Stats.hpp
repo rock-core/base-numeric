@@ -75,6 +75,8 @@ class Stats
     double sum_weight_;
     size_t n_;
 
+    double ddof_; //!< Delta degrees of freedem to correct variance estimates (default:0)
+
     void init( T const& data);
 
 public:
@@ -89,12 +91,21 @@ public:
     T stdev() const;
     double sumWeights() const;
     size_t n() const;
+
+    /** Sets the delta for degrees of freedom, that is used to correct variance estimates.
+     *
+     *      var = 1 / (N-ddof) * sum(x_i - mean)^2
+     *
+     * Default value is 0.
+     */
+    void setDDof(double new_ddof) { ddof_ = new_ddof; }
 };
 
 template <class T>
 Stats<T>::Stats() 
 {
     clear();
+    ddof_ = 0.0; 
 }
 
 template <class T>
@@ -170,13 +181,13 @@ T Stats<T>::mean() const
 template <class T>
 inline typename Stats<T>::SquareType  Stats<T>::var() const
 {
-    return (sum_weight_ > 0.0 ) ? SquareType(M2_ / sum_weight_) : Zero<SquareType>::value();
+    return (sum_weight_ > 0.0 ) ? SquareType(M2_ / (sum_weight_ - ddof_)) : Zero<SquareType>::value();
 }
 
 template <>
 inline Stats<VectorXd>::SquareType Stats<VectorXd>::var() const
 {
-    return ( sum_weight_ > 0.0 ) ? SquareType(M2_ / sum_weight_) :
+    return ( sum_weight_ > 0.0 ) ? SquareType(M2_ / (sum_weight_ - ddof_)) :
         base::MatrixXd::Zero(M2_.rows(),M2_.cols());
 }
 
