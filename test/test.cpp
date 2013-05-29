@@ -30,6 +30,26 @@ BOOST_AUTO_TEST_CASE( stats_test )
 
     // test weighted algorithm
     // TODO
+    
+    // test base::VectorXd
+    base::Stats <base::VectorXd> xv;
+    base::MatrixXd x_data(2,3);
+    x_data << 0.0, -1.0, 1.0, 1.0, 0.0, 1.0;
+    xv.update(x_data.col(0));
+    xv.update(x_data.col(1));
+    xv.update(x_data.col(2));
+    
+    base::VectorXd xmean(2);
+    xmean << 0.0, 2.0/3.0;
+    base::MatrixXd xvar(2,2);
+    xvar << 2.0/3.0, 1.0/3.0, 1.0/3.0, 2.0/9.0;
+    base::VectorXd xstd(2);
+    xstd << 0.81649658, 0.47140452;
+
+    BOOST_CHECK( xv.n() == 3);
+    BOOST_CHECK( xv.mean().isApprox(xmean) );
+    BOOST_CHECK( xv.var().isApprox(xvar) );
+    BOOST_CHECK( xv.stdev().isApprox(xstd,6) );
 }
 
 BOOST_AUTO_TEST_CASE( histogram_test )
