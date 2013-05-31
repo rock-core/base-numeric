@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE( stats_test )
 
     // test weighted algorithm
     // TODO
-    
+
     // test base::VectorXd
     base::Stats <base::VectorXd> xv;
     base::MatrixXd x_data(2,3);
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE( stats_test )
     xv.update(x_data.col(0));
     xv.update(x_data.col(1));
     xv.update(x_data.col(2));
-    
+
     base::VectorXd xmean(2);
     xmean << 0.0, 2.0/3.0;
     base::MatrixXd xvar(2,2);
@@ -50,6 +50,35 @@ BOOST_AUTO_TEST_CASE( stats_test )
     BOOST_CHECK( xv.mean().isApprox(xmean) );
     BOOST_CHECK( xv.var().isApprox(xvar) );
     BOOST_CHECK( xv.stdev().isApprox(xstd,6) );
+
+    // SeriesStats
+    base::MatrixXd s_data(4,3);
+    s_data << 0, -1,  1,
+              1,  0,  1,
+             -2,  1,  1,
+             -3,  2, -1;
+    double ddof = 1.0;
+    base::Vector4d s_mean;
+    s_mean << 0, 2.0/3.0, 0.0, -2.0/3.0;
+    base::MatrixXd s_var(4,4);
+    s_var <<   1,      0.5,    0,      -1.5,
+             0.5,  1.0/3.0, -0.5,  -4.0/3.0,
+               0,     -0.5,    3,       3.5,
+            -1.5, -4.0/3.0,  3.5,  19.0/3.0;
+    base::Vector4d s_std;
+    s_std << 1.0, 0.577735027, 1.73205081, 2.51661148;
+    base::Vector4d s_min, s_max;
+    s_min << -1.0, 0.0, -2.0, -3.0;
+    s_max <<  1.0, 1.0,  1.0,  2.0;
+
+    base::SeriesStats<double, Eigen::Dynamic, Eigen::Dynamic> msta(s_data, ddof);
+
+    BOOST_CHECK( msta.n() == 3 );
+    BOOST_CHECK( msta.min().isApprox(s_min) );
+    BOOST_CHECK( msta.max().isApprox(s_max) );
+    BOOST_CHECK( msta.mean().isApprox(s_mean) );
+    BOOST_CHECK( msta.var().isApprox(s_var) );
+    BOOST_CHECK( msta.stdev().isApprox(s_std,7) );
 }
 
 BOOST_AUTO_TEST_CASE( histogram_test )
@@ -256,24 +285,24 @@ BOOST_AUTO_TEST_CASE(test_join_vectors)
   std::copy(v1.begin(),v1.end(),result2.begin()+v2.size()+10);
   BOOST_CHECK_EQUAL(result.size(),result2.size());
   BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
-  
-  //half overlapping (left side) 
+
+  //half overlapping (left side)
   result = numeric::joinVectors(v1,v2,-5,0.0F);
   result2 = v2;
   result2.resize(-5+v1.size()+v2.size());
   std::copy(v1.begin()+(v2.size()-5),v1.end(),result2.begin()+v2.size());
   BOOST_CHECK_EQUAL(result.size(),result2.size());
   BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
-  
-  //half overlapping (right side) 
+
+  //half overlapping (right side)
   result = numeric::joinVectors(v1,v2,5,0.0F);
   result2 = v1;
   result2.resize(v2.size()+5);
   std::copy(v2.begin(),v2.end(),result2.begin()+5);
   BOOST_CHECK_EQUAL(result.size(),result2.size());
   BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
-  
-  //fully overlapping (v1 < v2) 
+
+  //fully overlapping (v1 < v2)
   result = numeric::joinVectors(v1,v2,-1,0.0F);
   result2 = v2;
   BOOST_CHECK_EQUAL(result.size(),result2.size());
@@ -284,8 +313,8 @@ BOOST_AUTO_TEST_CASE(test_join_vectors)
   std::copy(v1.begin(),v1.end(),result2.begin()+1);
   BOOST_CHECK_EQUAL(result.size(),result2.size());
   BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
-  
-  //fully overlapping (v1 = v2) 
+
+  //fully overlapping (v1 = v2)
   v2.resize(v1.size());
   result = numeric::joinVectors(v1,v2,0,0.0F);
   result2 = v2;
