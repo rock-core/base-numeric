@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE( stats_test )
     s_min << -1.0, 0.0, -2.0, -3.0;
     s_max <<  1.0, 1.0,  1.0,  2.0;
 
-    base::SeriesStats<double, Eigen::Dynamic, Eigen::Dynamic> msta(s_data, ddof);
+    base::SeriesStats msta(s_data, ddof);
 
     BOOST_CHECK( msta.n() == 3 );
     BOOST_CHECK( msta.min().isApprox(s_min) );
@@ -79,6 +79,21 @@ BOOST_AUTO_TEST_CASE( stats_test )
     BOOST_CHECK( msta.mean().isApprox(s_mean) );
     BOOST_CHECK( msta.var().isApprox(s_var) );
     BOOST_CHECK( msta.stdev().isApprox(s_std,7) );
+
+    base::VectorXd sw_weights(3);
+    base::Vector4d sw_mean;
+    base::MatrixXd sw_var(4,4);
+    sw_weights << 0.6, 0.1, 0.3;
+    sw_mean << 0.2, 0.9, -0.8, -1.9;
+    sw_var <<  0.390,  0.135,  0.600,  0.075,
+              0.135,  0.810, -1.755, -2.700,
+              0.600, -1.755,  5.970,  7.125,
+              0.075, -2.700,  7.125,  9.750;
+
+    base::SeriesStats mwsta(s_data, sw_weights, ddof);
+
+    BOOST_CHECK( mwsta.mean().isApprox(sw_mean) );
+    BOOST_CHECK( mwsta.var().isApprox(sw_var) );
 }
 
 BOOST_AUTO_TEST_CASE( histogram_test )

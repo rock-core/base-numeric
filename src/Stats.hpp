@@ -224,82 +224,98 @@ size_t Stats<T>::n() const
  *
  * One column is an observation and each row is a data item.
  *
- * e.g. like
+ * e.g. like (time step row is for illustrative purpose only)
  *
  * time step |  0   |   1   |  2  | ...
  * ----------+------+-------+-----+--
  *  speed    | 0.1  |  0.2  | 0.2 | ..
  *  xpos     | 0.0  |  0.1  | 0.3 | ...
  */
-template <class _Scalar, int _Rows, int _Cols, int _Options=0>
 class SeriesStats {
 
-    typedef Eigen::Matrix<_Scalar, _Rows, _Cols, _Options> DataMatrix;
-    typedef Eigen::Matrix<_Scalar, _Rows, _Rows, _Options> VarMatrix;
-    typedef Eigen::Matrix<_Scalar, _Rows, 1, _Options> Vector;
-    typedef Eigen::Matrix<_Scalar, _Cols, 1, _Options> WeightVector;
+    Eigen::VectorXd min_;
+    Eigen::VectorXd max_;
+    Eigen::VectorXd mean_;
+    Eigen::VectorXd stdev_;
 
-    Vector min_;
-    Vector max_;
-    Vector mean_;
-    Vector stdev_;
-
-    VarMatrix var_;
+    Eigen::MatrixXd var_;
 
     size_t n_;
 
 protected:
 
-    WeightVector weightOnes(const DataMatrix& data) {
-        return WeightVector::Ones(data.cols());
+    template<typename Derived>
+    Eigen::VectorXd weightOnes(const Eigen::MatrixBase<Derived>& data) {
+        return Eigen::VectorXd::Ones(data.cols());
     }
 
-    void compute (const DataMatrix& data) {
+    template <typename Derived>
+    void compute (const Eigen::MatrixBase<Derived>& data) {
         compute(data, weightOnes(data), 0.0);
     }
 
-    void compute (const DataMatrix& data, double ddof) {
+    template <typename Derived>
+    void compute (const Eigen::MatrixBase<Derived>& data, double ddof) {
         compute(data, weightOnes(data), ddof);
     }
 
-    void compute (const DataMatrix& data, const WeightVector& weights) {
+    template <typename Derived1, typename Derived2>
+    void compute (const Eigen::MatrixBase<Derived1>& data,
+                  const Eigen::MatrixBase<Derived2>& weights) {
+
         compute(data, weights, 0.0);
     }
 
-    void compute (const DataMatrix& data, const WeightVector& weights, double ddof) {
+    template <typename Derived1, typename Derived2>
+    void compute (const Eigen::MatrixBase<Derived1>& data,
+                  const Eigen::MatrixBase<Derived2>& weights, double ddof) {
 
         min_ = data.array().rowwise().minCoeff();
         max_ = data.array().rowwise().maxCoeff();
         n_ = data.cols();
         double w_sum = weights.sum();
-        DataMatrix weighted_data = data * (weights / w_sum * n_).asDiagonal();
+        Eigen::MatrixXd weighted_data = data * (weights / w_sum * n_).asDiagonal();
         mean_ = weighted_data.rowwise().mean();
-        DataMatrix centered_data = weighted_data.colwise() - mean_;
+        Eigen::MatrixXd centered_data = weighted_data.colwise() - mean_;
         var_ = centered_data * centered_data.adjoint() / ( n_ - ddof );
         stdev_ = var_.diagonal().array().sqrt();
     }
 
 public:
 
-    SeriesStats(const DataMatrix& data) { compute(data); }
+    template <typename Derived>
+    SeriesStats(const Eigen::MatrixBase<Derived>& data) { compute(data); }
 
-    SeriesStats(const DataMatrix& data, const WeightVector& weights) {
-        compute(data, weights);
-    }
-
-    SeriesStats(const DataMatrix& data, double ddof) {
+    template <typename Derived>
+    SeriesStats(const Eigen::MatrixBase<Derived>& data, double ddof) {
         compute(data, ddof);
     }
 
-    SeriesStats(const DataMatrix& data, const WeightVector& weights, double ddof) {
+    template <typename Derived1, typename Derived2>
+    SeriesStats(const Eigen::MatrixBase<Derived1>& data,
+                const Eigen::MatrixBase<Derived2>& weights) {
+        compute(data, weights);
+    }
+
+    /**Constructor for the class that gives statistics on time series data.
+     *
+     * \param data The time series data. Each row is a data item.
+     * \param weights A vector with amount of observations length weighing each column.
+     *          Weights are normalized to one and are one by default.
+     * \param ddof Delta degree of freedom for adjusting the variance estimate.
+     *          Default is 0. ( var = 1 / (N-ddof) * sum (x_i - x_mean)^2 )
+     */
+    template <typename Derived1, typename Derived2>
+    SeriesStats(const Eigen::MatrixBase<Derived1>& data,
+                const Eigen::MatrixBase<Derived2>& weights, double ddof) {
         compute(data, weights, ddof);
     }
 
-    Vector min() const { return min_; }
-    Vector max() const { return max_; }
-    Vector mean() const { return mean_; }
-    VarMatrix var() const { return var_; }
-    Vector stdev() const { return stdev_; }
+    const Eigen::VectorXd& min() const { return min_; }
+    const Eigen::VectorXd& max() const { return max_; }
+    const Eigen::VectorXd& mean() const { return mean_; }
+    const Eigen::MatrixXd& var() const { return var_; }
+    const Eigen::VectorXd& stdev() const { return stdev_; }
     size_t n() const { return n_; }
 
 };
