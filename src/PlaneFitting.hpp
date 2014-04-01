@@ -41,6 +41,25 @@ public:
     {
     }
 
+    /** 
+     * @brief scale the statistics
+     * Note that this will not have influence on the solution,
+     * but will only change the relative weighting towards additional datums.
+     */
+    void scale( Scalar scale )
+    {
+	x  *= scale;
+	y  *= scale;
+	z  *= scale;
+	xx *= scale;
+	yy *= scale;
+	xy *= scale;
+	xz *= scale;
+	yz *= scale;
+	zz *= scale;
+	n  *= scale;
+    }
+
     /**
      * @brief clears all previous input to the update method 
      */
