@@ -1,10 +1,10 @@
-#ifndef BASE_NUMERIC_PLANEFITTING_HPP__
-#define BASE_NUMERIC_PLANEFITTING_HPP__
+#ifndef __NUMERIC_PLANEFITTING_HPP__
+#define __NUMERIC_PLANEFITTING_HPP__
 
 #include <Eigen/Core>
 #include <Eigen/Cholesky>
 
-namespace base
+namespace numeric
 {
 
 /** 
@@ -176,5 +176,9 @@ public:
 };
 
 }
+
+#ifndef NUMERIC_DEPRECATE
+#include <numeric/backwards/PlaneFitting.hpp>
+#endif
 
 #endif

@@ -1,5 +1,7 @@
 rock_testsuite(
-    unit_test test.cpp
+    unit_test suite.cpp
+        test.cpp
+        numeric.cpp
     DEPS_PKGCONFIG base-types)
 
 #do not build this test if gsl is not installed 

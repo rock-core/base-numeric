@@ -1,6 +1,5 @@
-
-#ifndef __MATCH_TEMPLATE
-#define __MATCH_TEMPLATE 
+#ifndef __NUMERIC_MATCH_TEMPLATE_HPP__
+#define __NUMERIC_MATCH_TEMPLATE_HPP__
 
 #include <vector>
 #include <limits>
