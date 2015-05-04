@@ -1,9 +1,9 @@
-#ifndef BASE_NUMERIC_HISTOGRAM__
-#define BASE_NUMERIC_HISTOGRAM__
+#ifndef __NUMERIC_HISTOGRAM_HPP__
+#define __NUMERIC_HISTOGRAM_HPP__
 
 #include <algorithm>
 
-namespace base
+namespace numeric
 {
 
 template <class T>
@@ -134,5 +134,9 @@ struct Histogram : public Buckets<size_t>
 };
 
 }
+
+#ifndef NUMERIC_DEPRECATE
+#include <numeric/backwards/Histogram.hpp>
+#endif
 
 #endif

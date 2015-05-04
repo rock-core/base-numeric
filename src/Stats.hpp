@@ -1,10 +1,10 @@
-#ifndef BASE_STATS_HPP__
-#define BASE_STATS_HPP__
+#ifndef __NUMERIC_STATS_HPP__
+#define __NUMERIC_STATS_HPP__
 
 #include <Eigen/Core>
 #include <base/eigen.h>
 
-namespace base
+namespace numeric
 {
 
 template <class T>
@@ -144,8 +144,8 @@ void Stats<T>::update( T const& data, double weight )
     }
     else
     {
-	min_ = base::min_el(min_, data);
-	max_ = base::max_el(max_, data);
+	min_ = numeric::min_el(min_, data);
+	max_ = numeric::max_el(max_, data);
     }
 
     //
@@ -184,7 +184,7 @@ inline typename Stats<T>::SquareType  Stats<T>::var() const
 }
 
 template <>
-inline Stats<VectorXd>::SquareType Stats<VectorXd>::var() const
+inline Stats<base::VectorXd>::SquareType Stats<base::VectorXd>::var() const
 {
     return ( sum_weight_ > 0.0 ) ? SquareType(M2_ / (sum_weight_ - ddof_)) :
         base::MatrixXd::Zero(M2_.rows(),M2_.cols());
@@ -320,7 +320,10 @@ public:
 
 };
 
+} // namespace numeric
 
-} // namespace base
+#ifndef NUMERIC_DEPRECATE
+#include <numeric/backwards/Stats.hpp>
+#endif
 
 #endif

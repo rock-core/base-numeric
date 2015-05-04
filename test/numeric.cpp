@@ -1,14 +1,16 @@
+#define NUMERIC_DEPRECATE 1
 #include <boost/test/unit_test.hpp>
 #include <numeric/Stats.hpp>
 #include <numeric/Histogram.hpp>
 #include <numeric/MatchTemplate.hpp>
 #include <numeric/PlaneFitting.hpp>
 
-#ifndef NUMERIC_DEPRECATE
+BOOST_AUTO_TEST_SUITE(numeric)
+
 BOOST_AUTO_TEST_CASE( stats_test )
 {
     // singular value statistics
-    base::Stats<double> sv;
+    numeric::Stats<double> sv;
     sv.update( 1.0 );
     sv.update( 2.0 );
     sv.update( 3.0 );
@@ -19,7 +21,7 @@ BOOST_AUTO_TEST_CASE( stats_test )
     BOOST_CHECK_EQUAL( sv.max(), 3.0 );
 
     // specialisations for eigen
-    base::Stats< Eigen::Vector2d > mv;
+    numeric::Stats< Eigen::Vector2d > mv;
     mv.update( Eigen::Vector2d(0,1) );
     mv.update( Eigen::Vector2d(1,1) );
 
@@ -32,7 +34,7 @@ BOOST_AUTO_TEST_CASE( stats_test )
     // TODO
 
     // test base::VectorXd
-    base::Stats <base::VectorXd> xv;
+    numeric::Stats <base::VectorXd> xv;
     base::MatrixXd x_data(2,3);
     x_data << 0.0, -1.0, 1.0, 1.0, 0.0, 1.0;
     xv.update(x_data.col(0));
@@ -71,7 +73,7 @@ BOOST_AUTO_TEST_CASE( stats_test )
     s_min << -1.0, 0.0, -2.0, -3.0;
     s_max <<  1.0, 1.0,  1.0,  2.0;
 
-    base::SeriesStats msta(s_data, ddof);
+    numeric::SeriesStats msta(s_data, ddof);
 
     BOOST_CHECK( msta.n() == 3 );
     BOOST_CHECK( msta.min().isApprox(s_min) );
@@ -90,7 +92,7 @@ BOOST_AUTO_TEST_CASE( stats_test )
               0.600, -1.755,  5.970,  7.125,
               0.075, -2.700,  7.125,  9.750;
 
-    base::SeriesStats mwsta(s_data, sw_weights, ddof);
+    numeric::SeriesStats mwsta(s_data, sw_weights, ddof);
 
     BOOST_CHECK( mwsta.mean().isApprox(sw_mean) );
     BOOST_CHECK( mwsta.var().isApprox(sw_var) );
@@ -98,7 +100,7 @@ BOOST_AUTO_TEST_CASE( stats_test )
 
 BOOST_AUTO_TEST_CASE( histogram_test )
 {
-    base::Histogram h( 10, 0.0, 10.0 );
+    numeric::Histogram h( 10, 0.0, 10.0 );
 
     BOOST_CHECK_CLOSE( h.getLowerBound( 0 ), 0, 1e-6 );
     BOOST_CHECK_CLOSE( h.getUpperBound( 0 ), 1.0, 1e-6 );
@@ -119,7 +121,7 @@ BOOST_AUTO_TEST_CASE( histogram_test )
 BOOST_AUTO_TEST_CASE( planefitting_test )
 {
     // fully specified on xy plane
-    base::PlaneFitting<float> pf;
+    numeric::PlaneFitting<float> pf;
     pf.update( Eigen::Vector3f( 0.0, 0, -1.0 ) );
     pf.update( Eigen::Vector3f( 1.0, 0, -1.0 ) );
     pf.update( Eigen::Vector3f( 0.0, 1.0, -1.0 ) );
@@ -163,7 +165,7 @@ BOOST_AUTO_TEST_CASE( planefitting_test )
     pf.clear();
     pf.update( Eigen::Vector3f( 0.0, 0, -1.0 ), 0.5 );
     pf.update( Eigen::Vector3f( 0.0, 0, 1.0 ), 0.5 );
-    base::PlaneFitting<float>::Result res = pf.solve();
+    numeric::PlaneFitting<float>::Result res = pf.solve();
 
     BOOST_CHECK_CLOSE( res.getCovariance()(2,2), 1.0, 1e-4 );
     }
@@ -336,4 +338,5 @@ BOOST_AUTO_TEST_CASE(test_join_vectors)
   BOOST_CHECK_EQUAL(result.size(),result2.size());
   BOOST_CHECK_EQUAL(true,std::equal(result.begin(),result.end(),result2.begin()));
 }
-#endif
+
+BOOST_AUTO_TEST_SUITE_END()

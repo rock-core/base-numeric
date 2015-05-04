@@ -1,6 +1,5 @@
-
-#ifndef __FITPOLYNOM_H 
-#define __FITPOLYNOM_H
+#ifndef __NUMERIC_FITPOLYNOM_HPP__
+#define __NUMERIC_FITPOLYNOM_HPP__
 
 #include <math.h>
 #include <vector>
