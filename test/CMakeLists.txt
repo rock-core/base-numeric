@@ -3,6 +3,7 @@ rock_testsuite(unit_test
     test.cpp
     test_Combinatorics.cpp
     test_IntegerPartitioning.cpp
+    test_LimitedCombination.cpp
     numeric.cpp
     DEPS numeric)
 

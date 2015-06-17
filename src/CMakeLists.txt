@@ -7,6 +7,7 @@ rock_library(numeric
         FitPolynom.hpp
         Histogram.hpp
         IntegerPartitioning.hpp
+        LimitedCombination.hpp
         MatchTemplate.hpp
         PlaneFitting.hpp
         Stats.hpp
