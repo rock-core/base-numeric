@@ -1,6 +1,7 @@
 rock_testsuite(unit_test
     suite.cpp
     test.cpp
+    test_Combinatorics.cpp
     test_IntegerPartitioning.cpp
     numeric.cpp
     DEPS numeric)
