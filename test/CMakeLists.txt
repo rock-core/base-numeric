@@ -1,8 +1,9 @@
-rock_testsuite(
-    unit_test suite.cpp
-        test.cpp
-        numeric.cpp
-    DEPS_PKGCONFIG base-types)
+rock_testsuite(unit_test
+    suite.cpp
+    test.cpp
+    test_IntegerPartitioning.cpp
+    numeric.cpp
+    DEPS numeric)
 
 #do not build this test if gsl is not installed 
 
