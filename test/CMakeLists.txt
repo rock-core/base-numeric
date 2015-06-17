@@ -9,7 +9,7 @@ rock_testsuite(
 pkg_check_modules(GSL "gsl")
 if(GSL_FOUND)
     rock_testsuite(
-        unit_test_poly_fit test_polyfit.cpp
+        unit_test-fit_polynom test_FitPolynom.cpp
         DEPS_PKGCONFIG gsl)
 else(GSL_FOUND)
     message(STATUS "Cannot find gsl. Skip unit test for FitPolynom")
