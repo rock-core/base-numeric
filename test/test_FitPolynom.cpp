@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE TEST_POLY_FIT 
+#define BOOST_TEST_MODULE TEST_POLY_FIT
 #include <boost/test/included/unit_test.hpp>
 #include <numeric/FitPolynom.hpp>
 #include <iostream>
