@@ -6,6 +6,12 @@ rock_testsuite(unit_test
     test_LimitedCombination.cpp
     numeric.cpp
     DEPS numeric)
+    
+rock_testsuite(unit_test_filter
+	test_filter.cpp
+    #DEPS_PKGCONFIG base-types
+    DEPS numeric
+)
 
 #do not build this test if gsl is not installed 
 

@@ -4,6 +4,7 @@ rock_library(numeric
         backwards/PlaneFitting.hpp
         backwards/Stats.hpp
         Combinatorics.hpp
+        DiscreteFilter.hpp
         FitPolynom.hpp
         Histogram.hpp
         IntegerPartitioning.hpp
@@ -14,6 +15,7 @@ rock_library(numeric
         Twiddle.hpp
     SOURCES
         Combinatorics.cpp
+        DiscreteFilter.cpp
         IntegerPartitioning.cpp
         Twiddle.cpp
     DEPS_PKGCONFIG base-types base-lib
