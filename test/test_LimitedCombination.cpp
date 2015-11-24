@@ -17,7 +17,7 @@ void test(const std::string& testName, const std::map<std::string, size_t>& reso
         size_t actualSize = combinationList.size();
         size_t expectedSize = expectedSizes[i];
 
-        BOOST_REQUIRE_MESSAGE(actualSize == expectedSize, testName << ": number of combinations of size 1 equal number of available resources: expected: '" << expectedSize << "' vs. '" << actualSize << "'");
+        BOOST_REQUIRE_MESSAGE(actualSize == expectedSize, testName << ": number of combinations of size " << i << " equal number of available resources: expected: '" << expectedSize << "' vs. '" << actualSize << "'");
     }
 
     for(size_t i = 1; i <= expectedSizes.size(); ++i)
@@ -36,7 +36,7 @@ void test(const std::string& testName, const std::map<std::string, size_t>& reso
             expectedSize += expectedSizes[s];
         }
 
-        BOOST_REQUIRE_MESSAGE(actualSize == expectedSize, testName << ": number of combinations of size 1 equal number of available resources: expected: '" << expectedSize << "' vs. '" << actualSize << "'");
+        BOOST_REQUIRE_MESSAGE(actualSize == expectedSize, testName << ": number of combinations of size " << i << " equal number of available resources: expected: '" << expectedSize << "' vs. '" << actualSize << "'");
     }
 }
 

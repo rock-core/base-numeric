@@ -35,8 +35,8 @@ namespace numeric {
 template<typename AtomType>
 class LimitedCombination
 {
-    typedef uint32_t CoreType ;
-    typedef std::map< AtomType, size_t> AtomType2CountMap;
+    typedef uint32_t CoreType;
+    typedef std::map<AtomType, size_t> AtomType2CountMap;
     typedef std::vector<AtomType> AtomTypeList;
     typedef std::vector<CoreType> CombinationDescriptor;
 
@@ -44,9 +44,10 @@ class LimitedCombination
     AtomType2CountMap mAtomTypeAvailablilityMap;
     AtomTypeList mAtomTypeList;
 
-    std::vector<CoreType> mItems;
-    numeric::Combination<CoreType>* mpItemCombinationGenerator;
+    std::vector<CoreType> mLimits;
+    std::vector<CoreType> mCurrentCombination;
 
+    /// Size limit of the combination
     size_t mSize;
     numeric::Mode mMode;
 
@@ -58,15 +59,19 @@ class LimitedCombination
     {
         CoreType currentType = 0;
         typename AtomType2CountMap::const_iterator cit = mAtomTypeAvailablilityMap.begin();
-        for(; cit != mAtomTypeAvailablilityMap.end(); ++cit)
+        for(; cit != mAtomTypeAvailablilityMap.end(); ++cit, ++currentType)
         {
             mAtomTypeList.push_back(cit->first);
             size_t numberPerType = cit->second;
-            mItems.insert(mItems.begin(), numberPerType, currentType);
-            ++currentType;
+            mLimits.at(currentType) = numberPerType;
         }
 
-        mpItemCombinationGenerator = new numeric::Combination<CoreType>(mItems, mSize, mMode);
+        // Making sure this behaves like the other combinatorics loops
+        if(!next())
+        {
+            throw std::runtime_error("numeric::LimitedCombination::prepare: preparation failed "
+                    "check the given parameters");
+        }
     }
 
     /**
@@ -76,12 +81,42 @@ class LimitedCombination
     std::vector<AtomType> mapToAtomTypes(const std::vector<CoreType>& combination) const
     {
         std::vector<AtomType> atomTypeList;
-        std::vector<CoreType>::const_iterator cit = combination.begin();
-        for(; cit != combination.end(); ++cit)
+        for(size_t coreType = 0; coreType < combination.size(); ++coreType)
         {
-            atomTypeList.push_back( mAtomTypeList[*cit] );
+            size_t count = combination[coreType];
+            for(size_t i = 0; i < count; ++i)
+            {
+                atomTypeList.push_back( mAtomTypeList[coreType] );
+            }
         }
         return atomTypeList;
+    }
+
+    bool increment(std::vector<uint32_t>& combination, const std::vector<uint32_t>& limits) const
+    {
+        for(size_t pos = 0; pos < combination.size(); ++pos)
+        {
+            if( combination[pos] < limits[pos] )
+            {
+                ++combination[pos];
+                if(pos == 0)
+                {
+                    return true;
+                }
+
+                // reset lower values after overflow
+                for(int lpos = pos-1; lpos >= 0; --lpos)
+                {
+                    combination[lpos] = 0;
+                }
+                return true;
+            } else if(pos == combination.size() - 1)
+            {
+                return false;
+            }
+        }
+        throw std::runtime_error("numeric::LimitedCombination::increment internal error -- "
+                " please check consistency of your input");
     }
 
 public:
@@ -93,7 +128,8 @@ public:
      */
     LimitedCombination(const AtomType2CountMap& countMap, size_t size, numeric::Mode mode)
         : mAtomTypeAvailablilityMap(countMap)
-        , mpItemCombinationGenerator(0)
+        , mLimits(countMap.size(),0)
+        , mCurrentCombination(countMap.size(),0)
         , mSize(size)
         , mMode(mode)
     {
@@ -131,10 +167,20 @@ public:
      */
     std::vector<AtomType> current() const
     {
-        std::vector<CoreType> current = mpItemCombinationGenerator->current();
-        std::vector<AtomType> atomTypeList = mapToAtomTypes(current);
+        std::vector<AtomType> atomTypeList = mapToAtomTypes(mCurrentCombination);
         std::sort(atomTypeList.begin(), atomTypeList.end());
         return atomTypeList;
+    }
+
+    size_t getCombinationSize(const std::vector<CoreType>& combination) const
+    {
+        size_t combinationSize;
+        std::vector<CoreType>::const_iterator cit = combination.begin();
+        for(; cit != combination.end(); ++cit)
+        {
+            combinationSize += *cit;
+        }
+        return combinationSize;
     }
 
     /**
@@ -145,7 +191,42 @@ public:
      */
     bool next()
     {
-       return mpItemCombinationGenerator->next();
+        while(true)
+        {
+            bool hasNext = increment(mCurrentCombination, mLimits);
+            if(hasNext)
+            {
+                // check for size constraint
+                size_t combinationSize = getCombinationSize(mCurrentCombination);
+
+                switch(mMode)
+                {
+                    case EXACT:
+                        if(combinationSize != mSize)
+                        {
+                            continue;
+                        }
+                        break;
+                    case MAX:
+                        if(combinationSize > mSize)
+                        {
+                            continue;
+                        }
+                        break;
+                    case MIN:
+                        if(combinationSize < mSize)
+                        {
+                            continue;
+                        }
+                        break;
+                }
+                return true;
+            }
+
+            return false;
+        }
+
+        return false;
     }
 
 };
