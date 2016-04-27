@@ -120,21 +120,28 @@ BOOST_AUTO_TEST_CASE( histogram_test )
 
 BOOST_AUTO_TEST_CASE( planefitting_test )
 {
+    typedef numeric::PlaneFitting<float> PF;
     // fully specified on xy plane
-    numeric::PlaneFitting<float> pf;
+    PF pf;
     pf.update( Eigen::Vector3f( 0.0, 0, -1.0 ) );
     pf.update( Eigen::Vector3f( 1.0, 0, -1.0 ) );
     pf.update( Eigen::Vector3f( 0.0, 1.0, -1.0 ) );
-    Eigen::Vector3f r1 = pf.getCoeffs();
+    PF::Vector3 r1 = pf.getCoeffs();
     BOOST_CHECK_SMALL( r1.x(), 1e-6f );
     BOOST_CHECK_SMALL( r1.y(), 1e-6f );
     BOOST_CHECK_CLOSE( r1.z(), -1.0, 1e-6 );
+
+    PF::Vector3 no1 = pf.getNormal();
+    BOOST_CHECK_SMALL( no1.x(), 1e-6f);
+    BOOST_CHECK_SMALL( no1.y(), 1e-6f);
+    BOOST_CHECK_CLOSE( std::abs(no1.z()), 1.0, 1e-6 );
+
 
     // underspecified (returns xy plane)
     pf.clear();
     pf.update( Eigen::Vector3f( 0.0, 0, -1.0 ) );
     pf.update( Eigen::Vector3f( 1.0, 0, -1.0 ) );
-    Eigen::Vector3f r2 = pf.getCoeffs();
+    PF::Vector3 r2 = pf.getCoeffs();
     BOOST_CHECK_SMALL( r2.x(), 1e-4f );
     BOOST_CHECK_SMALL( r2.y(), 1e-4f );
     BOOST_CHECK_CLOSE( r2.z(), -1.0, 1e-4 );
@@ -145,7 +152,7 @@ BOOST_AUTO_TEST_CASE( planefitting_test )
     pf.update( Eigen::Vector3f( 0.0, 0, -1.0 ), 1.0 );
     pf.update( Eigen::Vector3f( 1.0, 0, -1.0 ), 1.0 );
     pf.update( Eigen::Vector3f( 0.0, 1.0, 0.0 ), 0.1 );
-    Eigen::Vector3f r3 = pf.getCoeffs();
+    PF::Vector3 r3 = pf.getCoeffs();
     // need to go down here with the accuracy
     // seems to be the solver which is happy
     // this way
@@ -155,7 +162,7 @@ BOOST_AUTO_TEST_CASE( planefitting_test )
 
     // this will actually yield a vector of all zeros
     pf.clear();
-    Eigen::Vector3f r4 = pf.getCoeffs();
+    PF::Vector3 r4 = pf.getCoeffs();
     BOOST_CHECK_SMALL( r4.x(), 1e-4f );
     BOOST_CHECK_SMALL( r4.y(), 1e-4f );
     BOOST_CHECK_SMALL( r4.z(), 1e-4f );
@@ -165,9 +172,12 @@ BOOST_AUTO_TEST_CASE( planefitting_test )
     pf.clear();
     pf.update( Eigen::Vector3f( 0.0, 0, -1.0 ), 0.5 );
     pf.update( Eigen::Vector3f( 0.0, 0, 1.0 ), 0.5 );
-    numeric::PlaneFitting<float>::Result res = pf.solve();
+    PF::Result res = pf.solve();
 
     BOOST_CHECK_CLOSE( res.getCovariance()(2,2), 1.0, 1e-4 );
+
+    PF::Vector3 normal = pf.getNormal();
+    BOOST_CHECK_SMALL(normal.z(), 1e-4f);
     }
 }
 
