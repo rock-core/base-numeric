@@ -28,16 +28,16 @@ public:
 	x(0), y(0), z(0), xx(0), yy(0), xy(0), xz(0), yz(0), zz(0), n(0) {}
 
     explicit PlaneFitting( const Vector3& p, Scalar weight = 1.0 ) :
-	x(p.x() * weight),
-	y(p.y() * weight),
-	z(p.z() * weight),
-	xx(p.x()*p.x() * weight),
-	yy(p.y()*p.y() * weight),
-	xy(p.x()*p.y() * weight),
-	xz(p.x()*p.z() * weight),
-	yz(p.y()*p.z() * weight),
-	zz(p.z()*p.z() * weight),
-	n(weight)
+        x(p.x() * weight),
+        y(p.y() * weight),
+        z(p.z() * weight),
+        xx(p.x()*x),
+        yy(p.y()*y),
+        xy(p.x()*y),
+        xz(p.x()*z),
+        yz(p.y()*z),
+        zz(p.z()*z),
+        n(weight)
     {
     }
 
@@ -89,25 +89,25 @@ public:
 
     class Result
     {
-	Matrix3 A;
-	Vector3 b;
 	Eigen::LDLT<Matrix3> ldlt;
 	Vector3 coeffs;
-	Scalar zz;
+	Scalar res;
 
     public:
 	explicit Result( const PlaneFitting<Scalar>& sum )
 	{
+	    Matrix3 A;
+	    Vector3 b;
 	    A << 
 	      sum.xx, sum.xy, sum.x,
 	      sum.xy, sum.yy, sum.y,
 	      sum.x, sum.y, sum.n;
 
 	    b = Vector3( sum.xz, sum.yz, sum.z );
-	    zz = sum.zz;
 
 	    ldlt.compute( A );
 	    coeffs = ldlt.solve( b );
+	    res = sum.zz - b.dot(coeffs); // == sum.zz - 2*b^T*coeffs + coeffs^T*A*coeffs
 	}
 
 	const Vector3& getCoeffs() const
@@ -117,9 +117,7 @@ public:
 
 	Scalar getResiduals() const
 	{
-	    return
-		zz - 2 * b.transpose() * coeffs +
-		coeffs.transpose() * A * coeffs;
+	    return res;
 	}
 
 	Matrix3 getCovariance() const
