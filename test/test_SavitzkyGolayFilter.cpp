@@ -1,10 +1,11 @@
-#define BOOST_TEST_MODULE TEST_SAVITZKY_GOLAY_FILTER
 #include <boost/test/included/unit_test.hpp>
 #include <numeric/SavitzkyGolayFilter.hpp>
 #include <iostream>
 
+BOOST_AUTO_TEST_SUITE(savitzky_golay)
+
 //test if Savitzky-Golay filter coefficients generator is working
-BOOST_AUTO_TEST_CASE(test_savitzky_golay_5pt_smooth_quadratic)
+BOOST_AUTO_TEST_CASE(savgol_5pt_smooth_quadratic)
 {
     /**
      * From: General Least-Squares smoothing and differentiation by the Convolution (Savitzky-Golay) method.
@@ -95,7 +96,7 @@ BOOST_AUTO_TEST_CASE(test_savitzky_golay_5pt_smooth_quadratic)
         BOOST_CHECK_CLOSE(coeff[i+half_width], values[i+half_width], 0.0001);
 }
 
-BOOST_AUTO_TEST_CASE(test_savitzky_golay_7pt_1stderivative_quadratic)
+BOOST_AUTO_TEST_CASE(savgol_7pt_1stderivative_quadratic)
 {
     /**
      * From: General Least-Squares smoothing and differentiation by the Convolution (Savitzky-Golay) method.
@@ -232,7 +233,7 @@ BOOST_AUTO_TEST_CASE(test_savitzky_golay_7pt_1stderivative_quadratic)
         BOOST_CHECK_CLOSE(coeff[i+half_width]*step, values[i+half_width], 0.0001);
 }
 
-BOOST_AUTO_TEST_CASE(test_savitzky_golay_9pt_3stderivative_sextic)
+BOOST_AUTO_TEST_CASE(savgol_9pt_3stderivative_sextic)
 {
     /**
      * From wikipedia: https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter
@@ -276,3 +277,5 @@ BOOST_AUTO_TEST_CASE(test_savitzky_golay_9pt_3stderivative_sextic)
     for(int i = -half_width; i <= half_width; i++)
         BOOST_CHECK_CLOSE(coeff[i+half_width], values[i+half_width], 0.0001);
 }
+
+BOOST_AUTO_TEST_SUITE_END()

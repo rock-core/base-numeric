@@ -4,6 +4,7 @@ rock_testsuite(unit_test
     test_Combinatorics.cpp
     test_IntegerPartitioning.cpp
     test_LimitedCombination.cpp
+    test_SavitzkyGolayFilter.cpp
     numeric.cpp
     DEPS numeric)
     
@@ -12,11 +13,6 @@ rock_testsuite(unit_test_filter
     #DEPS_PKGCONFIG base-types
     DEPS numeric
 )
-rock_testsuite(unit_test_savitzkygolayfilter
-	test_SavitzkyGolayFilter.cpp
-    DEPS numeric
-)
-
 
 #do not build this test if gsl is not installed 
 

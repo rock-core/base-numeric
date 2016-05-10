@@ -23,10 +23,10 @@ public:
 
     /** Compute the coefficients of Savitzky-Golay filter
      *
-     *  @param result coefficients
-     *  @param Least-Square point, between [-half_width, half_width]
-     *  @param half width
-     *  @param polynomial order
+     *  @param result, computed coefficients
+     *  @param ls_point, Least-Square point, between [-half_width, half_width]
+     *  @param half_width. Number of points used 2*half_width+1
+     *  @param poly_order, polynomial order
      *  @param derivative. 0 = smooth
      *  @param step. Necessary in case of derivatives, when the coefficients need to be divided by the step.
      */
