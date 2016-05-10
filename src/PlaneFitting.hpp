@@ -3,6 +3,7 @@
 
 #include <Eigen/Core>
 #include <Eigen/Cholesky>
+#include <Eigen/Eigenvalues>
 
 namespace numeric
 {
@@ -170,6 +171,69 @@ public:
     Matrix3 getCovariance() const
     {
 	return solve().getCovariance();
+    }
+
+    /**
+     * Class to fit a plane which minimizes the squared distances of the points in normal direction.
+     * For almost horizontal planes this is approximately the same as minimizing
+     */
+    class ResultNormal
+    {
+        Eigen::SelfAdjointEigenSolver<Matrix3> eig;
+        Scalar offset;
+    public:
+        typedef Eigen::Hyperplane<Scalar, 3> Plane;
+        ResultNormal(const PlaneFitting<Scalar>& sum )
+        {
+            Matrix3 moments;
+            Vector3 mu(sum.x, sum.y, sum.z);
+            moments << sum.xx, sum.xy, sum.xz,
+                       sum.xy, sum.yy, sum.yz,
+                       sum.xz, sum.yz, sum.zz;
+            if(sum.n > 0.0)
+            {
+                moments -= mu * mu.transpose() * (1.0/sum.n);
+                mu *= (1.0/sum.n);
+            }
+            eig.computeDirect(moments, Eigen::ComputeEigenvectors);
+            offset = -eig.eigenvectors().col(0).dot(mu);
+        }
+
+        Vector3 getNormal() const
+        {
+            return eig.eigenvectors().col(0);
+        }
+
+        Scalar getOffset() const
+        {
+            return offset;
+        }
+
+        /**
+         * Returns a plane parametrized by normal vector and offset
+         */
+        Plane getPlane() const
+        {
+            return Plane(getNormal(), getOffset());
+        }
+
+        /**
+         * Returns the chi^2 error
+         */
+        Scalar getResiduals() const
+        {
+            return eig.eigenvalues()[0];
+        }
+
+    };
+
+    ResultNormal solveNormal() const
+    {
+        return ResultNormal(*this);
+    }
+    Vector3 getNormal() const
+    {
+        return solveNormal().getNormal();
     }
 };
 
