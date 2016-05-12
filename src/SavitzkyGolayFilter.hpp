@@ -64,12 +64,13 @@ private:
      */
     double generalizedFactorial(int a, int b);
 
-    /** Chack parameters of Savitzky-Golay filter
+    /** Check parameters of Savitzky-Golay filter
      *
      *  @param t Least-Square point
      *  @param m half width
      *  @param n polynomial order
      *  @param s derivative
+     *  @param step. Step between points
      */
     void checkParameters(int t, int m, int n, int s, double step);
 };
