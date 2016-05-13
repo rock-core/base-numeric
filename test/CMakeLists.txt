@@ -4,6 +4,7 @@ rock_testsuite(unit_test
     test_Combinatorics.cpp
     test_IntegerPartitioning.cpp
     test_LimitedCombination.cpp
+    test_SavitzkyGolayFilter.cpp
     numeric.cpp
     DEPS numeric)
     

@@ -11,12 +11,14 @@ rock_library(numeric
         LimitedCombination.hpp
         MatchTemplate.hpp
         PlaneFitting.hpp
+        SavitzkyGolayFilter.hpp
         Stats.hpp
         Twiddle.hpp
     SOURCES
         Combinatorics.cpp
         DiscreteFilter.cpp
         IntegerPartitioning.cpp
+        SavitzkyGolayFilter.cpp
         Twiddle.cpp
     DEPS_PKGCONFIG base-types base-lib
 )
