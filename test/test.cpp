@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE( histogram_test )
 BOOST_AUTO_TEST_CASE( planefitting_test )
 {
     // fully specified on xy plane
-    base::PlaneFitting<float> pf;
+    numeric::PlaneFitting<float> pf;
     pf.update( Eigen::Vector3f( 0.0, 0, -1.0 ) );
     pf.update( Eigen::Vector3f( 1.0, 0, -1.0 ) );
     pf.update( Eigen::Vector3f( 0.0, 1.0, -1.0 ) );
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE( planefitting_test )
     pf.clear();
     pf.update( Eigen::Vector3f( 0.0, 0, -1.0 ), 0.5 );
     pf.update( Eigen::Vector3f( 0.0, 0, 1.0 ), 0.5 );
-    base::PlaneFitting<float>::Result res = pf.solve();
+    numeric::PlaneFitting<float>::Result res = pf.solve();
 
     BOOST_CHECK_CLOSE( res.getCovariance()(2,2), 1.0, 1e-4 );
     }
