@@ -135,8 +135,4 @@ struct Histogram : public Buckets<size_t>
 
 }
 
-#ifndef NUMERIC_DEPRECATE
-#include <numeric/backwards/Histogram.hpp>
-#endif
-
 #endif

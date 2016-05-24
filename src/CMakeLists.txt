@@ -1,8 +1,5 @@
 rock_library(numeric
     HEADERS
-        backwards/Histogram.hpp
-        backwards/PlaneFitting.hpp
-        backwards/Stats.hpp
         Combinatorics.hpp
         DiscreteFilter.hpp
         FitPolynom.hpp

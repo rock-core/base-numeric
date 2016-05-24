@@ -322,8 +322,4 @@ public:
 
 } // namespace numeric
 
-#ifndef NUMERIC_DEPRECATE
-#include <numeric/backwards/Stats.hpp>
-#endif
-
 #endif

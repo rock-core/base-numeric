@@ -239,8 +239,4 @@ public:
 
 }
 
-#ifndef NUMERIC_DEPRECATE
-#include <numeric/backwards/PlaneFitting.hpp>
-#endif
-
 #endif
