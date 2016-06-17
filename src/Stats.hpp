@@ -2,7 +2,7 @@
 #define __NUMERIC_STATS_HPP__
 
 #include <Eigen/Core>
-#include <base/eigen.h>
+#include <base/Eigen.hpp>
 
 namespace numeric
 {
