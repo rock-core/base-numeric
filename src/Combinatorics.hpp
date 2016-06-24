@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <stdint.h>
 #include <math.h>
-#include <base/Logging.hpp>
+#include <base-logging/Logging.hpp>
 
 #include <iostream>
 #include <boost/foreach.hpp>
