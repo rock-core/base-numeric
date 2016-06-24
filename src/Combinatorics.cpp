@@ -1,12 +1,11 @@
 #include "Combinatorics.hpp"
-#if __cplusplus <= 199711L
-#else
+#if __cplusplus < 201103L
 #include <boost/assign/list_of.hpp>
 #endif
 
 namespace numeric {
 
-#if __cplusplus <= 199711L
+#if __cplusplus >= 201103L
 std::map<Mode, std::string> ModeTxt = {
     {EXACT, "EXACT"},
     {MIN, "MIN"},
