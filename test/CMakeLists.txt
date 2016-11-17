@@ -6,6 +6,7 @@ rock_testsuite(unit_test
     test_LimitedCombination.cpp
     test_SavitzkyGolayFilter.cpp
     numeric.cpp
+    test_circle.cpp
     DEPS numeric)
     
 rock_testsuite(unit_test_filter
