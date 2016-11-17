@@ -15,7 +15,7 @@ namespace numeric
         /**Calculate intersections points of this and @p other.
          * @return a vector containing the intersections or an empty vector
          * if the circles do not intersect*/
-        std::vector<base::Vector2d> intersect(const Circle& other);
+        std::vector<base::Vector2d> intersect(const Circle& other) const;
         
         double getRadius() const;
         void setRadius(double radius);

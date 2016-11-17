@@ -12,7 +12,7 @@ numeric::Circle::Circle(double centerX, double centerY, double radius) : center(
 {}
 
  
-std::vector<base::Vector2d> Circle::intersect(const numeric::Circle& other)
+std::vector<base::Vector2d> Circle::intersect(const numeric::Circle& other) const
 {
     //see: http://paulbourke.net/geometry/circlesphere/
     //and  http://paulbourke.net/geometry/circlesphere/tangentpointtocircle.zip
