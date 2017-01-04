@@ -2,15 +2,16 @@
 
 using namespace numeric;
     
-Circle::Circle() : center(0, 0), r(1)
-{}
-
 Circle::Circle(const base::Vector2d& center, double radius) : center(center), r(radius)
 {}
 
-numeric::Circle::Circle(double centerX, double centerY, double radius) : center(centerX, centerY), r(radius)
+Circle::Circle(double centerX, double centerY, double radius) : center(centerX, centerY), r(radius)
 {}
 
+Circle Circle::Unit()
+{
+    return Circle(0, 0, 1);
+}
  
 std::vector<base::Vector2d> Circle::intersect(const numeric::Circle& other) const
 {
