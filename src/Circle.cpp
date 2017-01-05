@@ -36,8 +36,8 @@ std::vector<base::Vector2d> Circle::intersect(const numeric::Circle& other) cons
     else if(d > (r + r1))
         return result;
     //One circle is contained within the other
-    else if(d < (r - r1))
-        return result;
+    else if(d < fabs(r - r1))
+        return result; 
 
     /*
     //Considering the two right triangles p0p2p3 and p1p2p3 we can write:
