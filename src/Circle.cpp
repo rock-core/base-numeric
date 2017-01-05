@@ -85,8 +85,8 @@ std::vector<base::Vector2d> Circle::intersect(const numeric::Circle& other) cons
     double my =  (dx * h/d);
 
     //Add the offsets to point p2 to obtain the intersection points
-    result.emplace_back(px2 + mx, py2 + my);
-    result.emplace_back(px2 - mx, py2 - my);
+    result.push_back(base::Vector2d(px2 + mx, py2 + my));
+    result.push_back(base::Vector2d(px2 - mx, py2 - my));
     return result;
 }
 
