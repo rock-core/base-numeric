@@ -11,11 +11,13 @@ rock_library(numeric
         SavitzkyGolayFilter.hpp
         Stats.hpp
         Twiddle.hpp
+        Circle.hpp
     SOURCES
         Combinatorics.cpp
         DiscreteFilter.cpp
         IntegerPartitioning.cpp
         SavitzkyGolayFilter.cpp
         Twiddle.cpp
+        Circle.cpp
     DEPS_PKGCONFIG base-types base-lib
 )
