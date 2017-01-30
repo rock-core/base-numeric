@@ -1,5 +1,6 @@
 #pragma once
 #include <base/Eigen.hpp>
+#include <vector>
 
 namespace numeric
 {
@@ -7,6 +8,7 @@ namespace numeric
     {
     public:
         Circle(const base::Vector2d& center, double radius);
+        
         Circle(double centerX, double centerY, double radius);
         
         /**Create circle with center at 0/0 and radius 1 */
@@ -22,7 +24,8 @@ namespace numeric
         
         base::Vector2d getCenter() const;
         void setCenter(const base::Vector2d& c);
-    private:
+
+        
         base::Vector2d center;
         double r;
     };
