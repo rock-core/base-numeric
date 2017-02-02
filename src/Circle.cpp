@@ -75,7 +75,7 @@ std::vector<base::Vector2d> Circle::intersect(const numeric::Circle& other) cons
     //Tangent circles have only one intersection
     if(d == (r + r1))
     {
-        result.emplace_back(px2, py2);
+        result.push_back(base::Vector2d(px2, py2));
         return result;
     }
 
