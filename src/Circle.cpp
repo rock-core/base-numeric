@@ -16,21 +16,15 @@ Circle Circle::Unit()
 std::vector<base::Vector2d> Circle::intersect(const Eigen::ParametrizedLine<double, 2>& line) const
 {
     //Variable names correspond to names in:
-    //http://mathworld.wolfram.com/Circle-LineIntersection.html
+    //http://mathworld.wolfram.com/Circle-LineIntersection.html 
     
     std::vector<base::Vector2d> result;
     
-    Eigen::Vector2d p1 = line.pointAt(0);
-    Eigen::Vector2d p2 = line.pointAt(1);
-    
-    //move points to coordinate system of circle
-    p1 -= center;
-    p2 -= center;
-    
-    const double dx = p2.x() - p1.x();
-    const double dy = p2.y() - p1.y();
-    const double dr2 = dx * dx + dy * dy;
-    const double D = p1.x() * p2.y() - p2.x() * p1.y();
+    //-center to move point to coordinate system of circle
+    const Eigen::Vector2d p1 = line.origin() - center;    
+    const Eigen::Vector2d &d = line.direction();
+    const double dr2 = d.squaredNorm();
+    const double D = p1.x() * d.y() - d.x() * p1.y();
     const double delta = r * r * dr2 - D * D;
     
     if(dr2 == 0)
@@ -41,7 +35,7 @@ std::vector<base::Vector2d> Circle::intersect(const Eigen::ParametrizedLine<doub
     
     if(delta == 0) //one intersection
     {
-        base::Vector2d tangentPoint(D * dy / dr2, -D * dx / dr2);
+        base::Vector2d tangentPoint(D * d.y() / dr2, -D * d.x() / dr2);
         tangentPoint += center; //move back to original coordinate system
         result.push_back(tangentPoint);
         return result;
@@ -51,12 +45,12 @@ std::vector<base::Vector2d> Circle::intersect(const Eigen::ParametrizedLine<doub
     const double sqrtDelta = std::sqrt(delta);
     
     base::Vector2d intersection1;
-    intersection1.x() = (D * dy + dx * sqrtDelta) / dr2;
-    intersection1.y() = (-D * dx + dy * sqrtDelta) / dr2;
+    intersection1.x() = (D * d.y() + d.x() * sqrtDelta) / dr2;
+    intersection1.y() = (-D * d.x() + d.y() * sqrtDelta) / dr2;
     
     base::Vector2d intersection2;
-    intersection2.x() = (D * dy - dx * sqrtDelta) / dr2;
-    intersection2.y() = (-D * dx - dy * sqrtDelta) / dr2;
+    intersection2.x() = (D * d.y() - d.x() * sqrtDelta) / dr2;
+    intersection2.y() = (-D * d.x() - d.y() * sqrtDelta) / dr2;
     
     //move back to original coordinate system
     intersection1 += center;
