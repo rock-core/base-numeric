@@ -80,10 +80,10 @@ BOOST_AUTO_TEST_CASE(line3)
     const auto result = c1.intersect(line);
     BOOST_CHECK(result.size() == 2);   
     
-    BOOST_CHECK_CLOSE(result[1].x(), 3.27, 1);
-    BOOST_CHECK_CLOSE(result[1].y(), 3.01, 1);
-    BOOST_CHECK_CLOSE(result[0].x(), 5.22, 1);
-    BOOST_CHECK_CLOSE(result[0].y(), 4.13, 1);
+    BOOST_CHECK_CLOSE(result[0].x(), 3.27, 1);
+    BOOST_CHECK_CLOSE(result[0].y(), 3.01, 1);
+    BOOST_CHECK_CLOSE(result[1].x(), 5.22, 1);
+    BOOST_CHECK_CLOSE(result[1].y(), 4.13, 1);
 }
 
 BOOST_AUTO_TEST_CASE(lineTangent)

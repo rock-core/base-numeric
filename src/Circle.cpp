@@ -39,7 +39,7 @@ std::vector<base::Vector2d> Circle::intersect(const Eigen::ParametrizedLine<doub
     if(delta < 0) // no intersection
         return result;
     
-    if(delta == 0) //one ontersection
+    if(delta == 0) //one intersection
     {
         base::Vector2d tangentPoint(D * dy / dr2, -D * dx / dr2);
         tangentPoint += center; //move back to original coordinate system
@@ -48,16 +48,15 @@ std::vector<base::Vector2d> Circle::intersect(const Eigen::ParametrizedLine<doub
     }
     
     //two intersections
-    const double sgn = dy < 0? -1 : 1;
     const double sqrtDelta = std::sqrt(delta);
     
     base::Vector2d intersection1;
-    intersection1.x() = (D * dy + sgn * dx * sqrtDelta) / dr2;
-    intersection1.y() = (-D * dx + std::abs(dy) * sqrtDelta) / dr2;
+    intersection1.x() = (D * dy + dx * sqrtDelta) / dr2;
+    intersection1.y() = (-D * dx + dy * sqrtDelta) / dr2;
     
     base::Vector2d intersection2;
-    intersection2.x() = (D * dy - sgn * dx * sqrtDelta) / dr2;
-    intersection2.y() = (-D * dx - std::abs(dy) * sqrtDelta) / dr2;
+    intersection2.x() = (D * dy - dx * sqrtDelta) / dr2;
+    intersection2.y() = (-D * dx - dy * sqrtDelta) / dr2;
     
     //move back to original coordinate system
     intersection1 += center;
