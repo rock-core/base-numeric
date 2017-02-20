@@ -12,6 +12,61 @@ Circle Circle::Unit()
 {
     return Circle(0, 0, 1);
 }
+
+std::vector<base::Vector2d> Circle::intersect(const Eigen::ParametrizedLine<double, 2>& line) const
+{
+    //Variable names correspond to names in:
+    //http://mathworld.wolfram.com/Circle-LineIntersection.html
+    
+    std::vector<base::Vector2d> result;
+    
+    Eigen::Vector2d p1 = line.pointAt(0);
+    Eigen::Vector2d p2 = line.pointAt(1);
+    
+    //move points to coordinate system of circle
+    p1 -= center;
+    p2 -= center;
+    
+    const double dx = p2.x() - p1.x();
+    const double dy = p2.y() - p1.y();
+    const double dr2 = dx * dx + dy * dy;
+    const double D = p1.x() * p2.y() - p2.x() * p1.y();
+    const double delta = r * r * dr2 - D * D;
+    
+    if(dr2 == 0)
+        throw std::runtime_error("Cannot intersect line and circle. Line is invalid.");
+    
+    if(delta < 0) // no intersection
+        return result;
+    
+    if(delta == 0) //one ontersection
+    {
+        base::Vector2d tangentPoint(D * dy / dr2, -D * dx / dr2);
+        tangentPoint += center; //move back to original coordinate system
+        result.push_back(tangentPoint);
+        return result;
+    }
+    
+    //two intersections
+    const double sgn = dy < 0? -1 : 1;
+    const double sqrtDelta = std::sqrt(delta);
+    
+    base::Vector2d intersection1;
+    intersection1.x() = (D * dy + sgn * dx * sqrtDelta) / dr2;
+    intersection1.y() = (-D * dx + std::abs(dy) * sqrtDelta) / dr2;
+    
+    base::Vector2d intersection2;
+    intersection2.x() = (D * dy - sgn * dx * sqrtDelta) / dr2;
+    intersection2.y() = (-D * dx - std::abs(dy) * sqrtDelta) / dr2;
+    
+    //move back to original coordinate system
+    intersection1 += center;
+    intersection2 += center;
+    
+    result.push_back(intersection1);
+    result.push_back(intersection2);
+    return result;
+}
  
 std::vector<base::Vector2d> Circle::intersect(const numeric::Circle& other) const
 {
