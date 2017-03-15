@@ -19,5 +19,5 @@ rock_library(numeric
         SavitzkyGolayFilter.cpp
         Twiddle.cpp
         Circle.cpp
-    DEPS_PKGCONFIG base-types base-lib
+    DEPS_PKGCONFIG base-types base-lib base-logging
 )
