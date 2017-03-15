@@ -1,4 +1,5 @@
 #include "Circle.hpp"
+#include <stdexcept>
 
 using namespace numeric;
     
