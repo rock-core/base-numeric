@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(simple)
     Circle c1 = Circle::Unit(); 
     Circle c2(0.5, 0, 1);
     
-    const auto result = c1.intersect(c2);
+    std::vector<base::Vector2d> result = c1.intersect(c2);
     BOOST_CHECK(result.size() == 2);
     BOOST_CHECK_CLOSE(result[0].x(), 0.25, 0.001);
     BOOST_CHECK_CLOSE(result[1].x(), 0.25, 0.001);
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(line1)
     Eigen::Vector2d dir(0, 1);
     Eigen::ParametrizedLine<double, 2> line(origin, dir);
     
-    const auto result = c1.intersect(line);
+    std::vector<base::Vector2d> result = c1.intersect(line);
     BOOST_CHECK(result.size() == 2);   
     BOOST_CHECK_CLOSE(result[0].x(), 0, 0.0001);
     BOOST_CHECK_CLOSE(result[1].x(), 0, 0.0001);
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(line2)
     Eigen::Vector2d dir(0, 1);
     Eigen::ParametrizedLine<double, 2> line(origin, dir);
     
-    const auto result = c1.intersect(line);
+    std::vector<base::Vector2d> result = c1.intersect(line);
     BOOST_CHECK(result.size() == 2);   
     
     BOOST_CHECK_CLOSE(result[0].x(), 0, 0.0001);
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(line3)
     
     Eigen::ParametrizedLine<double, 2> line(p1, p1 - p2);
     
-    const auto result = c1.intersect(line);
+    std::vector<base::Vector2d> result = c1.intersect(line);
     BOOST_CHECK(result.size() == 2);   
     
     BOOST_CHECK_CLOSE(result[0].x(), 3.27, 1);
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(lineTangent)
     
     Eigen::ParametrizedLine<double, 2> line(p1, dir);
     
-    const auto result = c1.intersect(line);
+    std::vector<base::Vector2d>  result = c1.intersect(line);
     BOOST_CHECK(result.size() == 1);   
     
     BOOST_CHECK_CLOSE(result[0].x(), 0, 0.001);
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE(lineNoIntersection)
     
     Eigen::ParametrizedLine<double, 2> line(p1, dir);
     
-    const auto result = c1.intersect(line);
+    std::vector<base::Vector2d> result = c1.intersect(line);
     BOOST_CHECK(result.size() == 0);   
 }
 
