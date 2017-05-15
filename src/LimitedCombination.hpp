@@ -174,7 +174,7 @@ public:
 
     size_t getCombinationSize(const std::vector<CoreType>& combination) const
     {
-        size_t combinationSize;
+        size_t combinationSize = 0;
         std::vector<CoreType>::const_iterator cit = combination.begin();
         for(; cit != combination.end(); ++cit)
         {
