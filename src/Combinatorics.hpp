@@ -12,7 +12,6 @@
 #include <base-logging/Logging.hpp>
 
 #include <iostream>
-#include <boost/foreach.hpp>
 #include <numeric/Twiddle.hpp>
 #include <boost/math/special_functions/binomial.hpp>
 
