@@ -199,14 +199,21 @@ public:
             offset = -eig.eigenvectors().col(0).dot(mu);
         }
 
+        // Always report an upward-pointing normal vector (z > 0)
         Vector3 getNormal() const
         {
-            return eig.eigenvectors().col(0);
+            if(eig.eigenvectors().col(0).z() > 0)
+                return eig.eigenvectors().col(0);
+            else
+                return eig.eigenvectors().col(0) * -1.0;
         }
 
         Scalar getOffset() const
         {
-            return offset;
+            if(eig.eigenvectors().col(0).z() > 0)
+                return offset;
+            else
+                return -offset;
         }
 
         /**
