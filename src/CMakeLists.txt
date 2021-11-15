@@ -1,3 +1,5 @@
+rock_find_cmake(Boost)
+
 rock_library(numeric
     HEADERS
         Combinatorics.hpp
