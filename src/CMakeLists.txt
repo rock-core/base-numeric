@@ -1,5 +1,3 @@
-rock_find_cmake(Boost)
-
 rock_library(numeric
     HEADERS
         Combinatorics.hpp
@@ -22,4 +20,5 @@ rock_library(numeric
         Twiddle.cpp
         Circle.cpp
     DEPS_PKGCONFIG base-types base-lib base-logging
+    DEPS_CMAKE Boost
 )
