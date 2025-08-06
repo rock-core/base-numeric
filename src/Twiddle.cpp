@@ -20,7 +20,7 @@ bool Twiddle::isActivePosition(size_t position) const
 
 bool Twiddle::next()
 {
-  register int i, j, k;
+  int i, j, k;
   j = 1;
   while(p[j] <= 0)
     j++;
