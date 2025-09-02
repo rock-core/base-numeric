@@ -20,4 +20,5 @@ rock_library(numeric
         Twiddle.cpp
         Circle.cpp
     DEPS_PKGCONFIG base-types base-lib base-logging
+    DEPS_CMAKE Boost
 )
